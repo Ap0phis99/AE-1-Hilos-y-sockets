@@ -24,9 +24,7 @@ public class LibraryThread implements Runnable {
 		this.socketToClient = socketToClient;
 		thread.start();
 	}
-	
-	
-	
+		
 	private Persona login(String user, String pw) {
 		return this.user_manager.login(user, pw);
 	}
@@ -53,8 +51,8 @@ public class LibraryThread implements Runnable {
 		}
 	}
 	
-	private String addBook(String isbn, String title, String author,  int copies) {
-		this.library.addBook(isbn, title, author, copies);
+	private String addBook(String isbn, String title, String author, double price,  int copies) {
+		this.library.addBook(isbn, title, author, price, copies);
 		return "libro añadido a la librería";
 	}
 	
@@ -117,6 +115,7 @@ public class LibraryThread implements Runnable {
 				String isbn = "";
 				String title = "";
 				String auth = "anom";
+				double price = 0;
 				int copies = 0;
 				for(String attr : book_attrs) {
 					if(attr.indexOf("isbn") != -1) {
@@ -130,7 +129,7 @@ public class LibraryThread implements Runnable {
 					}
 				}
 				if(!isbn.equals("") && !title.equals("")) {
-					response = this.addBook(isbn, title, auth, copies);
+					response = this.addBook(isbn, title, auth, price, copies);
 				}else {
 					response = "no se ha podido añadir el libro al catalogo";
 				}

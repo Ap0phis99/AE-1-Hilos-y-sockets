@@ -69,6 +69,7 @@ public class Book {
 		return "isbn:" + isbn 
 				+ "\n titulo:" + title 
 				+ "\n autor:" + author 
+				+ "\n precio:" + price + "€"
 				+ "\n nº copias:" + copies 
 				+ "\n nº copias prestadas:" + borrowed ;
 	}
