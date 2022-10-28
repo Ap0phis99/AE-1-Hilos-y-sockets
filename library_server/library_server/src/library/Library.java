@@ -1,4 +1,5 @@
 package library;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,8 @@ public class Library {
 		this.addBook("898-5678884452", "Harry Potter y la piedra filosofal", "J.K. Rowling", 19.99, 10);
 		this.addBook("432-8823584452", "Harry Potter y la cámara secreta", "J.K. Rowling", 19.99, 8);
 		this.addBook("123-8478885566", "Harry Potter y el priosionero de Azkabán", "J.K. Rowling", 19.99, 7);
-		this.addBook("124-1110001000", "test", "testautor", 24.00, 5);
+		this.addBook("1234", "test", "test", 19.99, 1);
+		
 	}
 	
 	public void addBook(String isbn, String title, String author, double price) {
@@ -54,6 +56,24 @@ public class Library {
 		}
 	}
 	
+	private Book buyBook(String isbn) {
+		Book the_book = this.getBook(isbn);
+		if(the_book.sell(1)) {
+			this.books.put(isbn, the_book);
+			return the_book;
+		}else {
+			return null;
+		}
+	}
+	
+	private boolean removeBook(String isbn) {
+		if(this.books.get(isbn) != null) {
+			this.books.remove(isbn);
+			return true;
+		}
+		return false;		
+	}
+	
 	public Book getBookByISBN(String isbn) {
 		return this.getBook(isbn);
 	}
@@ -72,28 +92,19 @@ public class Library {
 		}
 		return books_by_auth;
 	}
-	
-	public Book borrowBookByISBN(String isbn) {
-		Book the_book = this.getBookByISBN(isbn);
-		if(the_book.borrow()) {
-			this.books.put(isbn, the_book);
-			return the_book;
-		}
-		return null;		
+	public Book buyBookByISBN(String isbn) {
+		return this.buyBook(isbn);		
 	}
 	
-	public Book borrowBookByTitle(String title) {
-		return this.borrowBookByISBN(this.title2isbn(title));
+	public Book buyBookByTitle(String title) {
+		return this.buyBookByISBN(this.title2isbn(title));
 	}
 	
-	public Book backBookByISBN(String isbn) {
-		Book the_book = this.getBookByISBN(isbn);
-		the_book.back();
-		this.books.put(isbn, the_book);
-		return the_book;
+	public boolean removeBookByISBN(String isbn) {
+		return this.removeBook(isbn);		
 	}
 	
-	public Book backBookByTitle(String title) {
-		return this.backBookByISBN(this.title2isbn(title));
+	public boolean removeBookByTitle(String title) {
+		return this.removeBook(this.title2isbn(title));
 	}
 }

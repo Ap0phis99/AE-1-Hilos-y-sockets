@@ -32,7 +32,7 @@ public class UserManager {
 	
 	private void loadDefUsers() {
 		this.personas.put("lib_admin@gmail.com", new Admin("lib_admin@gmail.com", "1234"));
-		this.personas.put("lib_user@gmail.com", new User("lib_admin@gmail.com", "1234"));
+		this.personas.put("lib_user@gmail.com", new User("lib_user@gmail.com", "1234"));
 		this.personas.put("asd", new User("asd", "1234"));
 	}
 

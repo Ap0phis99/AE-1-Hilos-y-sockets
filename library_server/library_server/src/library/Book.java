@@ -4,7 +4,6 @@ public class Book {
 	private String isbn;
 	private String author;
 	private int copies;
-	private int borrowed;
 	private String title;
 	private double price;
 	
@@ -14,7 +13,6 @@ public class Book {
 		this.author = author;
 		this.price = price;
 		this.copies = copies;
-		this.borrowed = 0;
 	}
 	
 	public String getIsbn() {
@@ -24,8 +22,7 @@ public class Book {
 	public String getAuthor() {
 		return author;
 	}
-	
-	
+		
 	public double getPrice() {
 		return this.price;
 	}	
@@ -38,30 +35,21 @@ public class Book {
 		return this.copies;
 	}
 	
-	public int getCopiesAvailable() {
-		return this.copies - this.borrowed;
-	}
-	
 	public int addCopies(int n) {
 		this.copies += n;		
 		return this.copies;
 	}
 	
-	public boolean isAvailable() {
-		return this.copies - this.borrowed > 0;
-	}
-	
-	public boolean borrow() {
-		if(this.isAvailable()) {
-			this.borrowed++;
+	public boolean sell(int n) {
+		if((this.copies - n) > 0) {
+			this.copies -= n;
 			return true;
-		}else {
-			return false;
 		}
+		return false;
 	}
 	
-	public void back() {
-		this.borrowed--;		
+	public boolean isAvailable() {
+		return this.copies > 0;
 	}
 
 	@Override
@@ -70,8 +58,6 @@ public class Book {
 				+ "\n titulo:" + title 
 				+ "\n autor:" + author 
 				+ "\n precio:" + price + "€"
-				+ "\n nº copias:" + copies 
-				+ "\n nº copias prestadas:" + borrowed ;
+				+ "\n nº copias:" + copies; 
 	}
-	
 }

@@ -91,37 +91,48 @@ public class LibraryClient {
 		return response;
 	}
 	
-	private void checkBook(String check_by) {
-		if(check_by.equals("isbn")) {
-			System.out.println("Introduzca el isbn");
-		}else if(check_by.equals("title")) {
-			System.out.println("Introduzca el titulo:");
-		}else if(check_by.equals("author")) {
-			System.out.println("Introduzca el nombre del autor:");
-		}else {
-			return;
-		}
-		
-		String value = sc.nextLine();
-		
-		this.execute("check", check_by+":"+value);
-	}
-	
-	private void borrowBook(String get_by) {
+	private String getSimpleReq(String get_by) {
 		String value = "";
 		if(get_by.equals("isbn")) {
 			System.out.println("Introduzca el isbn:");
 			value = "isbn";
 		}else if(get_by.equals("title")) {
-			System.out.println("Introduzca el título:");
+			System.out.println("Introduzca el titulo:");
 			value = "title";
-		}else {
-			return;
+		}else if(get_by.equals("author")) {
+			System.out.println("Introduzca el nombre del autor:");
 		}
-		
-		value += ":"+sc.nextLine();
-		
-		this.execute("borrow", value);
+		if(value != "") {
+			value += ":"+sc.nextLine();
+		}
+		return value;
+	}
+	
+	private void checkBook(String check_by) {
+		this.execute("check", this.getSimpleReq(check_by));
+	}
+	
+	private void removeBook(String get_by) {
+		this.execute("remove", this.getSimpleReq(get_by));		
+	}
+	
+	private void buyBook(String get_by) {
+		this.execute("buy", this.getSimpleReq(get_by));
+	}
+	
+	private void addBook() {
+		String body_req = "";
+		System.out.println("Introduzca el isbn:");
+		body_req += "isbn:"+sc.nextLine();
+		System.out.println("Introduzca el titulo:");
+		body_req += "|title:"+sc.nextLine();
+		System.out.println("Introduzca el autor:");
+		body_req += "|author:"+sc.nextLine();
+		System.out.println("Introduzca el precio:");
+		body_req += "|price:"+Double.parseDouble(sc.nextLine());
+		System.out.println("Introduzca el numero de copias:");
+		body_req += "|copies:"+Integer.parseInt(sc.nextLine());
+		this.execute("add", body_req);
 	}
 	
 	public void login() {
@@ -171,8 +182,7 @@ public class LibraryClient {
 			actions += 	"4. Añadir libro \n"+
 						"5. Descatalogar libro \n";
 		}else {
-			actions += 	"4. Solicitar préstamo \n"+
-						"5. Devolver libro \n";
+			actions += 	"4. Comprar Libro \n";
 		}
 		this.setWantGoOut(false);
 		System.out.println(actions);
@@ -188,34 +198,15 @@ public class LibraryClient {
 			if(this.getIsAdmin()) {
 				this.addBook();
 			}else {
-				this.borrowBook("isbn");
+				this.buyBook("isbn");
 			}
 		}else if(op.equals("5")) {
 			if(this.getIsAdmin()){
-				this.removeBook();
-			}else {
-				this.backBook("isbn");
+				this.removeBook("isbn");
 			}
 		}else{
 			this.setWantGoOut(true);
 		}
-		
-	}
-	
-
-	private void backBook(String string) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void addBook() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void removeBook() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public static void main(String[] args) {
@@ -233,11 +224,5 @@ public class LibraryClient {
 		}
 		
 		System.out.println("CLIENTE: Fin del programa");
-
 	}
-
-
-
-	
-
 }

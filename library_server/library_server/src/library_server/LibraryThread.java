@@ -56,36 +56,32 @@ public class LibraryThread implements Runnable {
 		return "libro añadido a la librería";
 	}
 	
-	private String borrowBook(String type, String value) {
-		Book borrowed = null;
-		if(type.equals("borrowbyisbn")) {
-			borrowed = this.library.borrowBookByISBN(value);
-		}else if(type.equals("borrowbytitle")){
-			borrowed = this.library.borrowBookByTitle(value);
+	private String buyBook(String type, String value) {
+		Book buy = null;
+		if(type.equals("buybyisbn")) {
+			buy = this.library.buyBookByISBN(value);
+		}else if(type.equals("buybytitle")){
+			buy = this.library.buyBookByTitle(value);
 		}
-		if(borrowed != null) {
-			return borrowed.getTitle()+" fue prestado";
+		if(buy != null) {
+			return buy.getTitle()+" fue comprado";
 		}else {
 			return "libro no disponible";
 		}
 	}
 	
-	private String returnBook(String type, String value) {
-		Book returned = null;
-		if(type.equals("isbn")) {
-			returned = this.library.backBookByISBN(value);;
-		}else if(type.equals("title")){
-			returned = this.library.backBookByTitle(value);
-		}
-		if(returned != null) {
-			return returned.getTitle()+" fue devuelto correctamente";
-		}else {
-			return "error al devolver el libro";
-		}		
-	}
-	
 	private String removeBook(String type, String value) {
-		return "";
+		boolean removed = false;
+		if(type.equals("removebyisbn")) {
+			removed = this.library.removeBookByISBN(value);
+		}else if(type.equals("removebytitle")){
+			removed = this.library.removeBookByTitle(value);
+		}
+		if(removed) {
+			return "El libro fue eliminado";
+		}else {
+			return "libro no disponible";
+		}
 	}
 	
 	private String processAction(String[] request_args) {
@@ -139,15 +135,14 @@ public class LibraryThread implements Runnable {
 					response = this.removeBook(query[0], query[1]);							
 				}else if(action.equals("check")) {
 					response = this.checkBooks(query[0], query[1]);
-				}else if(action.equals("borrow")) {
-					response = this.borrowBook(query[0], query[1]);							
-				}else if(action.equals("returnbook")){
-					response = this.returnBook(query[0], query[1]);								
-				}			
-			} 
-		}		
+				}else if(action.equals("buy")) {
+					response = this.buyBook(query[0], query[1]);								
+				} 	
+			}
+		}
 		return response;
 	}
+	
 	@Override
 	public void run() {
 		System.out.println("SERVIDOR: Estableciendo comunicacion con " + thread.getName());
@@ -186,7 +181,6 @@ public class LibraryThread implements Runnable {
 			e.printStackTrace();
 		}
 		
-
 	}
 
 }
