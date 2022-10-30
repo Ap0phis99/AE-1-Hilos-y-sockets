@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class LibraryClient {
+public class LibraryClient{
 	
 	public static final int PORT = 2018;
 	public static final String IP_SERVER = "localhost";
@@ -120,18 +120,18 @@ public class LibraryClient {
 		this.execute("buy", this.getSimpleReq(get_by));
 	}
 	
-	private void addBook() {
+	private synchronized void addBook() {
 		String body_req = "";
 		System.out.println("Introduzca el isbn:");
 		body_req += "isbn:"+sc.nextLine();
 		System.out.println("Introduzca el titulo:");
-		body_req += "|title:"+sc.nextLine();
+		body_req += ";title:"+sc.nextLine();
 		System.out.println("Introduzca el autor:");
-		body_req += "|author:"+sc.nextLine();
+		body_req += ";author:"+sc.nextLine();
 		System.out.println("Introduzca el precio:");
-		body_req += "|price:"+Double.parseDouble(sc.nextLine());
+		body_req += ";price:"+Double.parseDouble(sc.nextLine());
 		System.out.println("Introduzca el numero de copias:");
-		body_req += "|copies:"+Integer.parseInt(sc.nextLine());
+		body_req += ";copies:"+Integer.parseInt(sc.nextLine());
 		this.execute("add", body_req);
 	}
 	
@@ -208,7 +208,7 @@ public class LibraryClient {
 			this.setWantGoOut(true);
 		}
 	}
-
+	
 	public static void main(String[] args) {
 		System.out.println("        APLICACI�N CLIENTE         ");
 		System.out.println("-----------------------------------");

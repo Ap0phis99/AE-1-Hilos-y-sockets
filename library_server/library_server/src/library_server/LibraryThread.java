@@ -51,20 +51,20 @@ public class LibraryThread implements Runnable {
 		}
 	}
 	
-	private String addBook(String isbn, String title, String author, double price,  int copies) {
+	private synchronized String addBook(String isbn, String title, String author, double price,  int copies) {
 		this.library.addBook(isbn, title, author, price, copies);
 		return "libro añadido a la librería";
 	}
 	
 	private String buyBook(String type, String value) {
-		Book buy = null;
+		Book bought = null;
 		if(type.equals("buybyisbn")) {
-			buy = this.library.buyBookByISBN(value);
+			bought = this.library.buyBookByISBN(value);
 		}else if(type.equals("buybytitle")){
-			buy = this.library.buyBookByTitle(value);
+			bought = this.library.buyBookByTitle(value);
 		}
-		if(buy != null) {
-			return buy.getTitle()+" fue comprado";
+		if(bought != null) {
+			return bought.getTitle()+" fue comprado";
 		}else {
 			return "libro no disponible";
 		}
@@ -107,7 +107,7 @@ public class LibraryThread implements Runnable {
 			if(!loged.letActions(action)) {
 				response = "acción no permitida para este usuario";
 			}else if(action.equals("add")) {
-				String[] book_attrs = body.split("|");
+				String[] book_attrs = body.split(";");
 				String isbn = "";
 				String title = "";
 				String auth = "anom";
@@ -118,8 +118,10 @@ public class LibraryThread implements Runnable {
 						isbn = attr.replace("isbn:", "");
 					}else if(attr.indexOf("title") != -1) {
 						title = attr.replace("title:", "");
-					}else if(attr.indexOf("auth") != -1) {
-						auth = attr.replace("auth:", "");
+					}else if(attr.indexOf("author") != -1) {
+						auth = attr.replace("author:", "");
+					}else if(attr.indexOf("price") != -1) {
+						price = Double.parseDouble(attr.replace("price:", ""));
 					}else if(attr.indexOf("copies") != -1) {
 						copies = Integer.parseInt(attr.replace("copies:", ""));
 					}
@@ -131,12 +133,12 @@ public class LibraryThread implements Runnable {
 				}
 			}else {
 				String[] query = body.split(":");
-				if(action.equals("remove")) {				
-					response = this.removeBook(query[0], query[1]);							
-				}else if(action.equals("check")) {
-					response = this.checkBooks(query[0], query[1]);
+				if(action.equals("check")) {				
+					response = this.checkBooks(query[0], query[1]);							
 				}else if(action.equals("buy")) {
-					response = this.buyBook(query[0], query[1]);								
+					response = this.buyBook(query[0], query[1]);
+				}else if(action.equals("remove")) {
+					response = this.removeBook(query[0], query[1]);								
 				} 	
 			}
 		}

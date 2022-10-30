@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Library {
+public class Library{
 	
 	Map<String, Book> books;
 
@@ -107,4 +107,5 @@ public class Library {
 	public boolean removeBookByTitle(String title) {
 		return this.removeBook(this.title2isbn(title));
 	}
+		
 }

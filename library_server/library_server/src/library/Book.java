@@ -1,11 +1,11 @@
 package library;
 
-public class Book {
+public class Book{
 	private String isbn;
 	private String author;
 	private int copies;
-	private String title;
 	private double price;
+	private String title;
 	
 	public Book(String isbn, String title, String author, double price, int copies) {
 		this.isbn = isbn;
@@ -22,10 +22,6 @@ public class Book {
 	public String getAuthor() {
 		return author;
 	}
-		
-	public double getPrice() {
-		return this.price;
-	}	
 	
 	public String getTitle() {
 		return this.title;
@@ -34,7 +30,7 @@ public class Book {
 	public int getCopies() {
 		return this.copies;
 	}
-	
+		
 	public int addCopies(int n) {
 		this.copies += n;		
 		return this.copies;
@@ -51,13 +47,14 @@ public class Book {
 	public boolean isAvailable() {
 		return this.copies > 0;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "isbn:" + isbn 
 				+ "\n titulo:" + title 
 				+ "\n autor:" + author 
-				+ "\n precio:" + price + "€"
-				+ "\n nº copias:" + copies; 
+				+ "\n precio:" + price + "€" 
+				+ "\n no copias:" + copies;
 	}
+
 }
