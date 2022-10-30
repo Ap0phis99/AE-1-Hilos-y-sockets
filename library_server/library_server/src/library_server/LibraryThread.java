@@ -20,11 +20,11 @@ public class LibraryThread implements Runnable {
 	
 	public LibraryThread(Socket socketToClient) {
 		queryNum++;
-		thread = new Thread(this, "query_"+queryNum);
+		this.thread = new Thread(this, "query_"+queryNum);
 		this.socketToClient = socketToClient;
 		thread.start();
 	}
-		
+	
 	private Persona login(String user, String pw) {
 		return this.user_manager.login(user, pw);
 	}
@@ -39,8 +39,7 @@ public class LibraryThread implements Runnable {
 		else if(type.equals("author")) {			
 			for(Book book : this.library.getBooksByAuthor(value)) {
 				 response += book.toString() + "\n";
-			};
-			 
+			};			 
 		}
 		if(checked  != null && response.equals("")) {
 			return checked.toString();
@@ -51,16 +50,17 @@ public class LibraryThread implements Runnable {
 		}
 	}
 	
-	private synchronized String addBook(String isbn, String title, String author, double price,  int copies) {
+	private String addBook(String isbn, String title, String author, double price, int copies) {
 		this.library.addBook(isbn, title, author, price, copies);
+		
 		return "libro añadido a la librería";
 	}
 	
 	private String buyBook(String type, String value) {
 		Book bought = null;
-		if(type.equals("buybyisbn")) {
+		if(type.equals("isbn")) {
 			bought = this.library.buyBookByISBN(value);
-		}else if(type.equals("buybytitle")){
+		}else if(type.equals("title")){
 			bought = this.library.buyBookByTitle(value);
 		}
 		if(bought != null) {
@@ -72,9 +72,9 @@ public class LibraryThread implements Runnable {
 	
 	private String removeBook(String type, String value) {
 		boolean removed = false;
-		if(type.equals("removebyisbn")) {
+		if(type.equals("isbn")) {
 			removed = this.library.removeBookByISBN(value);
-		}else if(type.equals("removebytitle")){
+		}else if(type.equals("title")){
 			removed = this.library.removeBookByTitle(value);
 		}
 		if(removed) {
@@ -111,8 +111,8 @@ public class LibraryThread implements Runnable {
 				String isbn = "";
 				String title = "";
 				String auth = "anom";
-				double price = 0;
 				int copies = 0;
+				double price = 0;
 				for(String attr : book_attrs) {
 					if(attr.indexOf("isbn") != -1) {
 						isbn = attr.replace("isbn:", "");
@@ -133,16 +133,30 @@ public class LibraryThread implements Runnable {
 				}
 			}else {
 				String[] query = body.split(":");
-				if(action.equals("check")) {				
-					response = this.checkBooks(query[0], query[1]);							
+				if(action.equals("check")) {
+					response = this.checkBooks(query[0], query[1]);
 				}else if(action.equals("buy")) {
-					response = this.buyBook(query[0], query[1]);
+					response = this.buyBook(query[0], query[1]);							
 				}else if(action.equals("remove")) {
-					response = this.removeBook(query[0], query[1]);								
-				} 	
-			}
-		}
+					response = this.removeBook(query[0], query[1]);							
+				}		
+			} 
+		}		
 		return response;
+	}
+	
+	private String syncAddition( String response, java.lang.String[] strings) {
+		synchronized (this) {
+			System.out.println("SERVIDOR: resolviendo " + strings);
+				response = this.processAction(strings);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return response;
+			}
 	}
 	
 	@Override
@@ -162,13 +176,20 @@ public class LibraryThread implements Runnable {
 			String response = "";
 			
 			do {
+				
 				String request_body = buffer_input.readLine();
+				String [] request_splitted = request_body.split("#");
 				System.out.println("SERVIDOR: resolviendo " + request_body);
 				if(request_body == "exit") {
 					is_the_end = true;
 					response = "SERVIDOR BIBLIOTECA: SESIÓN CERRADA";
 				}else {
-					response = this.processAction(request_body.split("#"));
+					if(request_splitted[0].equals("add")) {
+						response = this.syncAddition(response, request_splitted);
+					}else {
+						response = this.processAction(request_splitted);
+					}
+					
 					output.println(response);					
 				}
 				System.out.println("SERVIDOR: peticion resuelta... ");
@@ -183,6 +204,7 @@ public class LibraryThread implements Runnable {
 			e.printStackTrace();
 		}
 		
+
 	}
 
 }

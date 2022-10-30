@@ -54,7 +54,7 @@ public class Book{
 				+ "\n titulo:" + title 
 				+ "\n autor:" + author 
 				+ "\n precio:" + price + "€" 
-				+ "\n no copias:" + copies;
+				+ "\n nº copias:" + copies;
 	}
 
 }

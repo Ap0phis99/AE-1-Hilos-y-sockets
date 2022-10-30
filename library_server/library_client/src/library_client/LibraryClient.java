@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class LibraryClient{
+public class LibraryClient {
 	
 	public static final int PORT = 2018;
 	public static final String IP_SERVER = "localhost";
@@ -78,7 +78,7 @@ public class LibraryClient{
 			response = bf.readLine();
 			
 		} catch (UnknownHostException e) {
-			System.err.println("CLIENTE: No encuentro el servidor en la dirección" + IP_SERVER);
+			System.err.println("CLIENTE: No encuentro el servidor en la direcci�n" + IP_SERVER);
 			e.printStackTrace();
 		} catch (IOException e) {
 			System.err.println("CLIENTE: Error de entrada/salida");
@@ -97,9 +97,10 @@ public class LibraryClient{
 			System.out.println("Introduzca el isbn:");
 			value = "isbn";
 		}else if(get_by.equals("title")) {
-			System.out.println("Introduzca el titulo:");
+			System.out.println("Introduzca el título:");
 			value = "title";
 		}else if(get_by.equals("author")) {
+			value = "author";
 			System.out.println("Introduzca el nombre del autor:");
 		}
 		if(value != "") {
@@ -120,7 +121,7 @@ public class LibraryClient{
 		this.execute("buy", this.getSimpleReq(get_by));
 	}
 	
-	private synchronized void addBook() {
+	private void addBook() {
 		String body_req = "";
 		System.out.println("Introduzca el isbn:");
 		body_req += "isbn:"+sc.nextLine();
@@ -182,7 +183,7 @@ public class LibraryClient{
 			actions += 	"4. Añadir libro \n"+
 						"5. Descatalogar libro \n";
 		}else {
-			actions += 	"4. Comprar Libro \n";
+			actions += 	"4. Comprar libro \n";
 		}
 		this.setWantGoOut(false);
 		System.out.println(actions);
@@ -207,6 +208,7 @@ public class LibraryClient{
 		}else{
 			this.setWantGoOut(true);
 		}
+		
 	}
 	
 	public static void main(String[] args) {
@@ -224,5 +226,6 @@ public class LibraryClient{
 		}
 		
 		System.out.println("CLIENTE: Fin del programa");
+
 	}
 }
